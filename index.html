@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CODE1230 - Assignment 2</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="stylesheet.css" />
+		<link rel="stylesheet" href="stylesheet2.css" />
+		<link rel="stylesheet" href="switch.css" />
+		<script src='./switch.js'></script>
+
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="divided">
+
+				<!-- One -->
+					<section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+						<div class="content">
+							<h1>CODE1230 Urban Modelling: Assignment 2</h1>
+							<p class="major">"Newly developing areas will push out the disadvantaged, in this case, the Indigenous population."</a> <a href="https://github.com/icecreamwaffles"> <br> <br>Alan Nguyen </a> and <a href="https://github.com/miragemoon"> Karen Kuan</a> </p>
+							<ul class="actions vertical">
+								<li><a href="#first" class="button big wide smooth-scroll-middle">Our Data</a></li>
+							</ul>
+						</div>
+						<div class="image">
+							<img src="images/banner.jpg" alt="" />
+						</div>
+					</section>
+
+				<!-- Two -->
+					<section class="banner style2 orient-right content-align-left image-position-center onscroll-image-fade-in" id="first">
+						<div class="content">
+
+ 						    <label class="switch left">
+ 						    	<input type="checkbox" id="myswitch1" checked onclick="toggleS1()">
+ 						    	<span class="slider round1">2011</span>
+ 						    </label>
+
+  							<label class="switch middle">
+ 						    	<input type="checkbox" id="myswitch2" onclick="toggleS2()">
+  							    <span class="slider round2">2016</span>
+  							</label>
+
+    						<label class="switch right">
+    							<input type="checkbox" id="myswitch3" onclick="toggleS3()">
+    							<span class="slider round3">Change</span>
+    						</label>
+
+						<div class="text2011" id="2011"><h2>2011 Data</h2>
+							The latte line is clearly evident as the indigenous community mainly resides within the southern regions of Sydney. However, as we move further away from the metropolitan areas, large groups of Indigenous Australians are focused around the far outskirts of Sydney e.g. the Whalan region - 44km west of Sydney CBD. <br><br>
+
+							<h4><i>Population of Indigenous Status by Age and Sex (Data G07)</i></h4></div>
+							
+						<div class="text2016" id="2016"><h2>2016 Data</h2>
+							Similar patterns can be seen in the 2016 data. Notice the outliers in the Little Bay, Randwick region where there is a huge increase of non-Indigenous people in the region; but it matches the height of the indigenous population but across less regions. <br> <br> <br>
+
+							<h4><i>Population of Indigenous Status by Age and Sex (Data G07)</i></h4></div>
+
+						<div class="text2011_2016" id="2011-2016"><h2>Population Change</h2>
+							The latte line is clearly evident as the indigenous community mainly resides within the southern regions of Sydney. However, as we move further away from the metropolitan areas, large groups of Indigenous Australians are focused around the far outskirts of Sydney e.g. the Whalan region - 44km west of Sydney CBD. <br> <br>
+							<h4><i>Change in Population of Indigenous Status by Age and Sex (Data G07)</i></h4></div>
+
+							<a href="#second" class="button big wide smooth-scroll-bottom">Purpose</a><br>
+						</div>
+
+
+
+<div class="map">	
+    <meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
+    <script src='./IND_PEOPLE_2011.js'></script>
+    <script src='./IND_PEOPLE_2016.js'></script>
+    <script src='./DIFF_IND_PEOPLE.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        .map { margin:0; padding:0; width: 58%;}
+        #map { position:absolute; top:0; bottom:0; width:58%; }
+
+    </style>
+    <div id='map'></div>
+
+    <script>
+        for (var i = 0; i < data3.features.length; i++) {
+        if(data3.features[i].properties['DIFF_IND_P'] < 1)
+            data3.features[i].properties['DIFF_IND_P'] = 0;
+        else
+            data3.features[i].properties['DIFF_IND_P'] = 100;
+    }
+    </script>
+
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiMTE0IiwiYSI6ImNqNmxwcGtpYzFyeWYyd3J5bm1lcXgxNG8ifQ.ZUuVddZoF461aSgMY-oxKA';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/114/cj7li1ti34g4z2ro73aq8pkbo',
+        center: [151.1, -33.865143],
+        zoom: 10,
+        pitch: 20,
+        bearing: 20
+    });
+
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2011',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data1
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'IND_P_2011',
+                    "stops": [
+                        [0, '#AE63E9'],
+                        [70, '#FFE75C']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'IND_P_2011',
+                    "stops": [
+                        [0, 0],
+                        [100, 10000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2016',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data2
+            },
+            'layout': {
+            'visibility': 'none',
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'IND_P_2016',
+                    "stops": [
+                        [0, '#AE63E9'],
+                        [70, '#FFE75C']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'IND_P_2016',
+                    "stops": [
+                        [0, 0],
+                        [100, 10000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2011_2016',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data3
+            },
+            'layout': {
+            'visibility': 'none',
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'DIFF_IND_P',
+                    "stops": [
+                        [0, '#f44141'],
+                        [70, '#4286f4']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'ADIF_IND_P',
+                    "stops": [
+                        [0, 0],
+                        [200, 30000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+</script>
+</div>
+</section>
+
+
+<!-- Three -->
+<section class="banner style3 orient-right content-align-left image-position-center onscroll-image-fade-in" id="second">
+	<div class="content">
+	<h2>Purpose of the Data</h2>
+	<p>Both government and private firms can utilise this data to help address the discrepancy between the standard of living for Indigenous people. Parties include, the Australian Institute of Health and Welfare and educational private sectors like UNSW. <br> <br> 
+	Rather than changing the data so that the indigenous community lives in the inner suburbs, it will be more effective to work on increasing accessibility to services to improve the standard of living for these communities.</p>
+	<ul class="actions vertical"></ul>
+	</div>
+<div class="image">
+	<img src="images/pic01.jpg" alt="" />
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="wrapper style1 align-center">
+	<div class="inner">
+	<a href="https://github.com/icecreamwaffles"> <br> <br>Alan Nguyen </a> and <a href="https://github.com/miragemoon"> Karen Kuan</a> </a> 
+	<h6> References: w3schools, mapbox, proto.io, stack overflow, codepen, rob.asher (Medium) and HTML5 UP (2017) </h6></p>
+	</div>
+	</footer>
+</div>
+
+<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>

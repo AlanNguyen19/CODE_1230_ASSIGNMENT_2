@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
+    <script src='./IND_PEOPLE_2011.js'></script>
+    <script src='./IND_PEOPLE_2016.js'></script>
+    <script src='./DIFF_IND_PEOPLE.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" type="text/css" href="switchmap.css" />
+
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+
+    <script>
+        for (var i = 0; i < data3.features.length; i++) {
+        if(data3.features[i].properties['DIFF_IND_P'] < 1)
+            data3.features[i].properties['DIFF_IND_P'] = 0;
+        else
+            data3.features[i].properties['DIFF_IND_P'] = 100;
+    }
+    </script>
+
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiMTE0IiwiYSI6ImNqNmxwcGtpYzFyeWYyd3J5bm1lcXgxNG8ifQ.ZUuVddZoF461aSgMY-oxKA';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/114/cj7kdsnop7d812romyo9emz18',
+        center: [151.209900, -33.865143],
+        zoom: 10,
+        pitch: 40,
+        bearing: 20
+    });
+
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2011',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data1
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'IND_P_2011',
+                    "stops": [
+                        [0, '#AE63E9'],
+                        [70, '#FFE75C']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'IND_P_2011',
+                    "stops": [
+                        [0, 0],
+                        [100, 10000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2016',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data2
+            },
+            'layout': {
+            'visibility': 'none',
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'IND_P_2016',
+                    "stops": [
+                        [0, '#AE63E9'],
+                        [70, '#FFE75C']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'IND_P_2016',
+                    "stops": [
+                        [0, 0],
+                        [100, 10000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+    map.on('load', function() {
+
+        map.addLayer({
+            'id': 'IND2011_2016',
+            'type': 'fill-extrusion',
+            'source': {
+                // Geojson Data source used in vector tiles, documented at
+                // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
+                'type': 'geojson',
+                'data': data3
+            },
+            'layout': {
+            'visibility': 'none',
+            },
+            'paint': {
+                // See the Mapbox Style Spec for details on property functions
+                // https://www.mapbox.com/mapbox-gl-style-spec/#types-function
+                'fill-extrusion-color': {
+                    // Get the fill-extrusion-color from the source 'color' property.
+                    'property': 'DIFF_IND_P',
+                    "stops": [
+                        [0, '#f44141'],
+                        [70, '#4286f4']
+                        ]
+                },
+                'fill-extrusion-height': {
+                    // Get fill-extrusion-height from the source 'height' property.
+                    'property': 'ADIF_IND_P',
+                    "stops": [
+                        [0, 0],
+                        [200, 30000]
+                        ]
+                },
+                // Make extrusions slightly opaque for see through indoor walls.
+                'fill-extrusion-opacity': 0.8
+            }
+        });
+    });
+
+    function toggleS1() {
+        document.getElementById("myswitch1").checked = true;
+        document.getElementById("myswitch2").checked = false;
+        document.getElementById("myswitch3").checked = false;
+        updateSwitchView();
+    }
+
+    function toggleS2() {
+        document.getElementById("myswitch1").checked = false;
+        document.getElementById("myswitch2").checked = true;
+        document.getElementById("myswitch3").checked = false;
+        updateSwitchView();
+    }
+    function toggleS3() {
+        document.getElementById("myswitch1").checked = false;
+        document.getElementById("myswitch2").checked = false;
+        document.getElementById("myswitch3").checked = true;
+        updateSwitchView();
+    }
+    function updateSwitchView(){
+        if (document.getElementById("myswitch1").checked) {
+            map.setLayoutProperty('IND2011', 'visibility', 'visible');
+        } else {
+            map.setLayoutProperty('IND2011', 'visibility', 'none');
+        }
+
+        if (document.getElementById("myswitch2").checked) {
+            map.setLayoutProperty('IND2016', 'visibility', 'visible');
+        } else {
+            map.setLayoutProperty('IND2016', 'visibility', 'none');
+        }
+
+        if (document.getElementById("myswitch3").checked) {
+            map.setLayoutProperty('IND2011_2016', 'visibility', 'visible');
+        } else {
+            map.setLayoutProperty('IND2011_2016', 'visibility', 'none');
+        }
+    }
+    </script>
+    
+    <label class="switch left">
+      <input type="checkbox" id="myswitch1" checked onclick="toggleS1()">
+      <span class="slider round1"></span>
+    </label>
+
+    <label class="switch middle">
+      <input type="checkbox" id="myswitch2" onclick="toggleS2()">
+      <span class="slider round2"></span>
+    </label>
+
+    <label class="switch right">
+      <input type="checkbox" id="myswitch3" onclick="toggleS3()">
+      <span class="slider round3"></span>
+    </label>
+
+</body>
+</html>
